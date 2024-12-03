@@ -71,7 +71,7 @@ export default function SendMessage({
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="name">Sender's Name</InputLabel>
+                  <InputLabel htmlFor="name">Sender&apos;s Name</InputLabel>
                   <OutlinedInput
                     id="sender-name"
                     type="text"
