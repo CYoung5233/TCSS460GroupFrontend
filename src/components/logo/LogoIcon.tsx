@@ -1,4 +1,3 @@
-
 // next
 import Image from 'next/image';
 
@@ -10,6 +9,5 @@ export default function LogoIcon() {
 
   return (
     <Image src={logoIcon} alt="UW" width={55} height={55} />
-
   );
 }
