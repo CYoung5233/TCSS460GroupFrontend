@@ -90,24 +90,29 @@ export default function SearchBook() {
         throw new Error(data.message || `HTTP error! status: ${response.status}`);
       }
       
+      // handle different response formats
       if (data.entry) {
-        // Single book response
+        // single book response
         setBooks([data.entry]);
       } else if (data.entries) {
-        // Multiple books response
+        // multiple books response
         const processedBooks = data.entries.map((entry: any) => {
+          // check if entry is already a book object
           if (typeof entry === 'object') {
-            return entry;
+            return {
+              ...entry,
+              rating_avg: entry.rating_avg ? parseFloat(entry.rating_avg) : undefined,
+              rating_count: entry.rating_count ? parseInt(entry.rating_count) : undefined
+            };
           }
-          const matches = entry.match(/{'ISBN: ' (\d+)} - 'Title: '\[(.*?)\]  ' author '\[(.*?)\] ' publication year: \[(\d+)\] ' rating count: \[(\d+)\] ' rating average: ' \[(\d+)\]/);
+          const matches = entry.match(/{'ISBN: ' (\d+)} - 'Title: '\[(.*?)\]  ' author '\[(.*?)\] ' publication year: \[(\d+)\]/);
           if (matches) {
             return {
               isbn13: matches[1],
               title: matches[2],
               authors: matches[3],
               publication_year: parseInt(matches[4]),
-              rating_count: parseInt(matches[5]), 
-              rating_avg: parseFloat(matches[6]) 
+              rating_avg: 0
             };
           }
           return null;
@@ -201,15 +206,17 @@ export default function SearchBook() {
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
                           <Rating 
-                            value={book.rating_avg} 
+                            value={book.rating_avg || 0} 
                             precision={0.1} 
                             readOnly 
                             size="small"
                           />
-                          <Typography variant="body2" color="text.secondary">
-                            ({book.rating_avg?.toFixed(1)})
-                            {book.rating_count && ` - ${book.rating_count} ratings`}
-                          </Typography>
+                          {book.rating_avg !== undefined && (
+                            <Typography variant="body2" color="text.secondary">
+                              ({book.rating_avg.toFixed(1)})
+                              {book.rating_count ? ` - ${book.rating_count} ratings` : ''}
+                            </Typography>
+                          )}
                         </Box>
                       </Box>
                     }
