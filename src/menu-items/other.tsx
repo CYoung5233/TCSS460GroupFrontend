@@ -6,6 +6,8 @@ import QuestionOutlined from '@ant-design/icons/QuestionOutlined';
 import StopOutlined from '@ant-design/icons/StopOutlined';
 import PhoneOutlined from '@ant-design/icons/PhoneOutlined';
 import FullscreenOutlined from '@ant-design/icons/FullscreenOutlined';
+import Book from '@ant-design/icons/BookOutlined';
+import Search from '@ant-design/icons/SearchOutlined';
 
 // type
 import { NavItemType } from 'types/menu';
@@ -15,7 +17,9 @@ const icons = {
   QuestionOutlined,
   StopOutlined,
   PhoneOutlined,
-  FullscreenOutlined
+  FullscreenOutlined,
+  Book,
+  Search
 };
 
 // ==============================|| MENU ITEMS - SUPPORT ||============================== //
@@ -26,12 +30,18 @@ const other: NavItemType = {
   type: 'group',
   children: [
     {
-      id: 'disabled-menu',
-      title: <FormattedMessage id="disabled-menu" />,
+      id: 'Add Book',
+      title: <FormattedMessage id="add-book" />,
       type: 'item',
-      url: '#',
-      icon: icons.StopOutlined,
-      disabled: true
+      url: '/add-book',
+      icon: icons.Book,
+    },
+    {
+      id: 'Search Books',
+      title: <FormattedMessage id="search-books" />,
+      type: 'item',
+      url: '/search-book',
+      icon: icons.Search
     },
     {
       id: 'full-page',
