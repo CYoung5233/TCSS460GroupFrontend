@@ -1,6 +1,6 @@
 import SignIn from 'views/auth/login';
 
-// ==============================|| PAGE ||============================== //
+// ==============================|| PAGE ||==============================
 
 export default function SignInPage() {
   return <SignIn />;
