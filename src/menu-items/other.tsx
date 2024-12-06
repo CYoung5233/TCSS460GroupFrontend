@@ -34,7 +34,7 @@ const other: NavItemType = {
       title: <FormattedMessage id="add-book" />,
       type: 'item',
       url: '/add-book',
-      icon: icons.Book,
+      icon: icons.Book
     },
     {
       id: 'Search Books',
