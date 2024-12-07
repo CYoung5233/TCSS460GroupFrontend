@@ -68,7 +68,7 @@ export default function BookSend() {
             <BookIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Add book
+            Add book (Won't work due to API not having IDs given to books)
           </Typography>
 
           <Box sx={{ mt: 1 }}>

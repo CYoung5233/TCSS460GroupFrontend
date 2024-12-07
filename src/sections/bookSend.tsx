@@ -32,9 +32,9 @@ export default function SendBook({
     <>
       <Formik
         initialValues={{
-          name: '',
+          ISBN: '',
+          title: '',
           author: '',
-          isbn13: '',
           publicationYear: '',
           totalRatings: '',
           oneStar: '',
@@ -47,8 +47,8 @@ export default function SendBook({
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          name: Yup.string().max(255).required('Book name is required'),
-          isbn13: Yup.string().matches(/^[0-9]+$/, "Must be only digits").max(13, 'Must be 13 digits').min(13, 'Must be 13 digits').required("ISBN is required"),
+          title: Yup.string().max(255).required('Book name is required'),
+          ISBN: Yup.string().matches(/^[0-9]+$/, "Must be only digits").max(13, 'Must be 13 digits').min(13, 'Must be 13 digits').required("ISBN is required"),
           publicationYear: Yup.string().matches(/^[0-9]+$/, "Must be only digits").max(4, 'Must be under 5 digits').required("Year is required"),
           totalRatings: Yup.number().nullable().typeError("Must be a number").moreThan(-1, "Cannot be negative"),
           oneStar: Yup.number().nullable().typeError("Must be a number").moreThan(-1, "Cannot be negative"),
@@ -65,14 +65,14 @@ export default function SendBook({
           console.dir(values);
 
           axios
-            .post('/library/add', { isbn13: values.isbn13, title: values.name, author: values.author, publicationYear: values.publicationYear, totalRatings: values.totalRatings, oneStar: values.oneStar, twoStar: values.twoStar, threeStar: values.threeStar, fourStar: values.fourStar, fiveStar: values.fiveStar, imageSmallURL: values.imageSmallURL, imageLargeURL: values.imageLargeURL,})
+            .post('/library/add', { ISBN: values.ISBN, author: values.author, publicationYear: values.publicationYear, title: values.title, totalRatings: values.totalRatings, oneStar: values.oneStar, twoStar: values.twoStar, threeStar: values.threeStar, fourStar: values.fourStar, fiveStar: values.fiveStar, imageSmallURL: values.imageSmallURL, imageLargeURL: values.imageLargeURL})
             .then((response) => {
               setSubmitting(false);
               resetForm({
                 values: {
-                    name: '',
+                    ISBN: '',
+                    title: '',
                     author: '',
-                    isbn13: '',
                     publicationYear: '',
                     totalRatings: '',
                     oneStar: '',
@@ -89,7 +89,7 @@ export default function SendBook({
             })
             .catch((error) => {
               console.error(error);
-              setErrors({ name: error.message });
+              setErrors({ title: error.message });
               setSubmitting(false);
               onError(error.message);
             });
@@ -100,22 +100,22 @@ export default function SendBook({
             <Grid container spacing={0}>
               <Grid item xs={12}>
                 <Stack spacing={0}>
-                  <InputLabel htmlFor="name">Title</InputLabel>
+                  <InputLabel htmlFor="title">Title</InputLabel>
                   <OutlinedInput
                     id="book-name"
                     type="text"
-                    value={values.name}
-                    name="name"
+                    value={values.title}
+                    name="title"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter book name"
+                    placeholder="Enter book title"
                     fullWidth
-                    error={Boolean(touched.name && errors.name)}
+                    error={Boolean(touched.title && errors.title)}
                   />
                 </Stack>
-                {touched.name && errors.name && (
+                {touched.title && errors.title && (
                   <FormHelperText error id="standard-weight-helper-text-name-message-send">
-                    {errors.name}
+                    {errors.title}
                   </FormHelperText>
                 )}
               </Grid>
@@ -142,22 +142,22 @@ export default function SendBook({
               </Grid>
               <Grid item xs={12}>
                 <Stack spacing={0}>
-                  <InputLabel htmlFor="isbn13">ISBN</InputLabel>
+                  <InputLabel htmlFor="ISBN">ISBN</InputLabel>
                   <OutlinedInput
                     fullWidth
-                    error={Boolean(touched.isbn13 && errors.isbn13)}
-                    id="isbn13"
+                    error={Boolean(touched.ISBN && errors.ISBN)}
+                    id="ISBN"
                     type="number"
-                    value={values.isbn13}
-                    name="isbn13"
+                    value={values.ISBN}
+                    name="ISBN"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     placeholder="Enter ISBN"
                   />
                 </Stack>
-                {touched.isbn13 && errors.isbn13 && (
+                {touched.ISBN && errors.ISBN && (
                   <FormHelperText error id="standard-weight-helper-text-msg-message-send">
-                    {errors.isbn13}
+                    {errors.ISBN}
                   </FormHelperText>
                 )}
                </Grid>
