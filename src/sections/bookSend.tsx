@@ -65,7 +65,7 @@ export default function SendBook({
           console.dir(values);
 
           axios
-            .post('/library/add', { ISBN: values.ISBN, author: values.author, publicationYear: values.publicationYear, title: values.title, totalRatings: values.totalRatings, oneStar: values.oneStar, twoStar: values.twoStar, threeStar: values.threeStar, fourStar: values.fourStar, fiveStar: values.fiveStar, imageSmallURL: values.imageSmallURL, imageLargeURL: values.imageLargeURL})
+            .post('/library/add', { ISBN: values.ISBN, author: values.author, publicationYear: values.publicationYear, title: values.title, totalRatings: (values.oneStar+values.twoStar+values.threeStar+values.threeStar+values.fourStar+values.fiveStar), oneStar: values.oneStar, twoStar: values.twoStar, threeStar: values.threeStar, fourStar: values.fourStar, fiveStar: values.fiveStar, imageSmallURL: values.imageSmallURL, imageLargeURL: values.imageLargeURL})
             .then((response) => {
               setSubmitting(false);
               resetForm({
@@ -225,28 +225,6 @@ export default function SendBook({
                   </FormHelperText>
                 )}
 
-
-                </Grid>
-              <Grid item xs={12}>
-                <Stack spacing={0}>
-                  <InputLabel htmlFor="totalRatings">Total Ratings (Optional)</InputLabel>
-                  <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.totalRatings && errors.totalRatings)}
-                    id="totalRatings"
-                    type="number"
-                    value={values.totalRatings}
-                    name="totalRatings"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder="Enter total ratings"
-                  />
-                </Stack>
-                {touched.totalRatings && errors.totalRatings && (
-                  <FormHelperText error id="standard-weight-helper-text-msg-message-send">
-                    {errors.totalRatings}
-                  </FormHelperText>
-                )}
 
                 </Grid>
               <Grid item xs={12}>
