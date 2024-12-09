@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import MainCard from 'components/MainCard';
-import { 
+import {
   Typography,
   Select,
   MenuItem,
@@ -20,6 +20,9 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
+// routing
+import { useSearchParams, useRouter } from 'next/navigation';
+
 interface Book {
   isbn13: string;
   authors: string;
@@ -30,6 +33,9 @@ interface Book {
 }
 
 export default function SearchBook() {
+  const searchParams = useSearchParams();
+  const authors = searchParams.get('authors');
+  const [initialSearchDone, setInitialSearchDone] = useState(!authors);
   const [searchType, setSearchType] = useState('title');
   const [searchValue, setSearchValue] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -37,15 +43,36 @@ export default function SearchBook() {
   const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
-    setSearchValue('');
-    setBooks([]);
-    setError(null);
-  }, [searchType]);
+    if (!initialSearchDone && authors) {
+      setSearchType('author');
+      setSearchValue(authors);
+      setBooks([]);  // Clear books whenever search params change
+      setError(null);  // Reset error state
+      setInitialSearchDone(true);
+      handleSearchClick();
+    }
+  }, [authors, initialSearchDone]); // Effect depends on authors and searchValue
+
+
+  useEffect(() => {
+    if(initialSearchDone) {
+      setSearchValue('');
+      setBooks([]);
+      setError(null);
+    }
+  }, [searchType, initialSearchDone]);
+
+
+  const router = useRouter();
+
+  const handleBookClick = (isbn13: string) => {
+    router.push(`/book/details?isbn13=${isbn13}`);
+  };
 
   const handleSearchClick = async () => {
     setError(null);
     setLoading(true);
-    
+
     if (!searchValue.trim()) {
       setError('Please enter a search term');
       setLoading(false);
@@ -89,35 +116,37 @@ export default function SearchBook() {
       if (!response.ok) {
         throw new Error(data.message || `HTTP error! status: ${response.status}`);
       }
-      
+
       // handle different response formats
       if (data.entry) {
         // single book response
         setBooks([data.entry]);
       } else if (data.entries) {
         // multiple books response
-        const processedBooks = data.entries.map((entry: any) => {
-          // check if entry is already a book object
-          if (typeof entry === 'object') {
-            return {
-              ...entry,
-              rating_avg: entry.rating_avg ? parseFloat(entry.rating_avg) : undefined,
-              rating_count: entry.rating_count ? parseInt(entry.rating_count) : undefined
-            };
-          }
-          const matches = entry.match(/{'ISBN: ' (\d+)} - 'Title: '\[(.*?)\]  ' author '\[(.*?)\] ' publication year: \[(\d+)\]/);
-          if (matches) {
-            return {
-              isbn13: matches[1],
-              title: matches[2],
-              authors: matches[3],
-              publication_year: parseInt(matches[4]),
-              rating_avg: 0
-            };
-          }
-          return null;
-        }).filter(Boolean);
-        
+        const processedBooks = data.entries
+          .map((entry: any) => {
+            // check if entry is already a book object
+            if (typeof entry === 'object') {
+              return {
+                ...entry,
+                rating_avg: entry.rating_avg ? parseFloat(entry.rating_avg) : 0,
+                rating_count: entry.rating_count ? parseInt(entry.rating_count) : 0
+              };
+            }
+            const matches = entry.match(/{'ISBN: ' (\d+)} - 'Title: '\[(.*?)\]  ' author '\[(.*?)\] ' publication year: \[(\d+)\]/);
+            if (matches) {
+              return {
+                isbn13: matches[1],
+                title: matches[2],
+                authors: matches[3],
+                publication_year: parseInt(matches[4]),
+                rating_avg: 0
+              };
+            }
+            return null;
+          })
+          .filter(Boolean);
+
         setBooks(processedBooks);
       } else {
         setBooks([]);
@@ -138,11 +167,7 @@ export default function SearchBook() {
         {/* search controls */}
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-            <Select
-              value={searchType}
-              onChange={(e: SelectChangeEvent) => setSearchType(e.target.value)}
-              sx={{ minWidth: 120 }}
-            >
+            <Select value={searchType} onChange={(e: SelectChangeEvent) => setSearchType(e.target.value)} sx={{ minWidth: 120 }}>
               <MenuItem value="title">Title</MenuItem>
               <MenuItem value="author">Author</MenuItem>
               <MenuItem value="isbn">ISBN</MenuItem>
@@ -155,7 +180,7 @@ export default function SearchBook() {
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder={`Search by ${searchType}...`}
-              onKeyPress={(e) => {
+              onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   handleSearchClick();
                 }
@@ -180,6 +205,7 @@ export default function SearchBook() {
               {books.map((book, index) => (
                 <ListItem 
                   key={book.isbn13 || index}
+                  onClick={() => handleBookClick(book.isbn13)}
                   sx={{ 
                     mb: 2, 
                     bgcolor: 'background.paper',
@@ -211,7 +237,7 @@ export default function SearchBook() {
                             readOnly 
                             size="small"
                           />
-                          {book.rating_avg !== undefined && (
+                          {book.rating_avg !== undefined && book.rating_avg !== null && (
                             <Typography variant="body2" color="text.secondary">
                               ({book.rating_avg.toFixed(1)})
                               {book.rating_count ? ` - ${book.rating_count} ratings` : ''}
