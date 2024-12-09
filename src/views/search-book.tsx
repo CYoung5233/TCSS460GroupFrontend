@@ -22,6 +22,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 // routing
 import { useSearchParams, useRouter } from 'next/navigation';
+import { set } from 'lodash';
 
 interface Book {
   isbn13: string;
@@ -35,7 +36,10 @@ interface Book {
 export default function SearchBook() {
   const searchParams = useSearchParams();
   const authors = searchParams.get('authors');
-  const [initialSearchDone, setInitialSearchDone] = useState(!authors);
+  const published = searchParams.get('published');
+  const rating = searchParams.get('rating');
+  const value = (authors || published || rating);
+  const [initialSearchDone, setInitialSearchDone] = useState(!value);
   const [searchType, setSearchType] = useState('title');
   const [searchValue, setSearchValue] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -43,20 +47,30 @@ export default function SearchBook() {
   const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
-    if (!initialSearchDone && authors) {
-      setSearchType('author');
-      setSearchValue(authors);
+    if (!initialSearchDone && value) {
+      switch(value) {
+        case authors:
+          setSearchType('author');
+          break;
+        case published:
+          setSearchType('year');
+          break;
+        case rating:
+          setSearchType('rating');
+          break;
+      }
+      setSearchValue(value);
       setBooks([]);  // Clear books whenever search params change
       setError(null);  // Reset error state
     }
-  }, [authors]);
+  }, [authors, published, rating]);
 
   useEffect(() => {
-    if (!initialSearchDone && searchType === 'author' && searchValue === authors) {
+    if (!initialSearchDone && (searchType === 'author' || searchType === 'year' || searchType === 'rating') && searchValue === value) {
       handleSearchClick();
       setInitialSearchDone(true);
     }
-  }, [searchValue, searchType, initialSearchDone]); 
+  }, [searchValue, searchType]); 
 
 
   useEffect(() => {

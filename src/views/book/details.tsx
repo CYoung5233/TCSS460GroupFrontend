@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BookInfo, mapApiResponseToBookInfo } from 'types/books';
-import { Typography, Rating } from '@mui/material';
+import { Box, Typography, Rating } from '@mui/material';
 
 const Loading = () => <p>Loading...</p>;
 const ErrorMessage = ({ error }: { error: string }) => <p>Error: {error}</p>;
@@ -33,6 +33,12 @@ const BookDetails = () => {
   const router = useRouter();
   const handleAuthorsClick = (authors: string) => {
     router.push(`/search-book?authors=${authors}`);
+  };
+  const handlePublishedClick = (published: number) => {
+    router.push(`/search-book?published=${published}`);
+  };
+  const handleRatingsClick = (rating?: number) => {
+    if(rating || rating === 0) router.push(`/search-book?rating=${rating}`);
   };
 
   useEffect(() => {
@@ -67,26 +73,30 @@ const BookDetails = () => {
             <p onClick={() => handleAuthorsClick(bookDetails.authors)}>
             <strong>Author:</strong> {bookDetails.authors}
             </p>
-            <p>
+            <p onClick={() => handlePublishedClick(bookDetails.publication_year)}>
               <strong>Published:</strong> {bookDetails.publication_year}
             </p>
             <p>
             <strong>ISBN:</strong> {bookDetails.isbn13}
             </p>
-            <Rating 
-                value={bookDetails.rating_avg || 0} 
-                precision={0.1} 
-                readOnly 
-                size="medium"
-              />
-              {bookDetails.rating_avg !== undefined && bookDetails.rating_avg !== null && (
-                <Typography variant="body2" color="text.secondary">
-                  ({bookDetails.rating_avg.toFixed(1)})
-                  {bookDetails.rating_count ? ` - ${bookDetails.rating_count} ratings` : ''}
-                </Typography>
-              )}
+            <Box onClick={() => handleRatingsClick(bookDetails.rating_avg)}>
+              <Rating 
+                  
+                  value={bookDetails.rating_avg || 0} 
+                  precision={0.1} 
+                  readOnly 
+                  size="medium"
+                />
+                {bookDetails.rating_avg !== undefined && bookDetails.rating_avg !== null && (
+                  <Typography variant="body2" color="text.secondary">
+                    ({bookDetails.rating_avg.toFixed(1)})
+                    {bookDetails.rating_count ? ` - ${bookDetails.rating_count} ratings` : ''}
+                  </Typography>
+                )}
+            </Box>
           </Typography>
         </div>
+        <p>1 Stars: {bookDetails.rating_1_star}, 2 Stars: {bookDetails.rating_2_star}, 3 Stars: {bookDetails.rating_3_star}, 4 Stars: {bookDetails.rating_4_star}, 5 Stars: {bookDetails.rating_5_star}</p>
       </div>
     </div>
   );
