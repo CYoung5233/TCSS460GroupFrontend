@@ -30,27 +30,6 @@ const other: NavItemType = {
   type: 'group',
   children: [
     {
-      id: 'Add Book',
-      title: <FormattedMessage id="add-book" />,
-      type: 'item',
-      url: '/add-book',
-      icon: icons.Book
-    },
-    {
-      id: 'add-book-new',
-      title: 'Add Book New',
-      type: 'item',
-      url: '/add-book-new',
-      icon: icons.Book
-    },
-    {
-      id: 'Search Books',
-      title: <FormattedMessage id="search-books" />,
-      type: 'item',
-      url: '/search-book',
-      icon: icons.Search
-    },
-    {
       id: 'full-page',
       title: <FormattedMessage id="full-page" />,
       type: 'item',
