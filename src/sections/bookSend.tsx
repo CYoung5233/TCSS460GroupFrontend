@@ -56,8 +56,8 @@ export default function SendBook({
           threeStar: Yup.number().nullable().typeError("Must be a number").moreThan(-1, "Cannot be negative"),
           fourStar: Yup.number().nullable().typeError("Must be a number").moreThan(-1, "Cannot be negative"),
           fiveStar: Yup.number().nullable().typeError("Must be a number").moreThan(-1, "Cannot be negative"),
-          imageSmallURL: Yup.string().max(16).required('Small Image URL is required'),
-          imageLargeURL: Yup.string().max(16).required('Large Image URL is required'),
+          imageSmallURL: Yup.string().max(64).required('Small Image URL is required'),
+          imageLargeURL: Yup.string().max(64).required('Large Image URL is required'),
           author: Yup.string().max(255).required('Author is required')
 
         })}
