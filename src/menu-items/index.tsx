@@ -3,6 +3,7 @@ import samplePage from './sample-page';
 import other from './other';
 import pages from './messages';
 import searchBooks from './books/searchBooks';
+import search from './search';
 
 // types
 import { NavItemType } from 'types/menu';
@@ -10,7 +11,7 @@ import { NavItemType } from 'types/menu';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems: { items: NavItemType[] } = {
-  items: [samplePage, pages, other, searchBooks]
+  items: [samplePage, pages, other, searchBooks, search]
 };
 //This is what's causing the nav bar warning - there is no searchBooks under views/books
 //TODO - either move searchBooks to views/books/ or get rid of the searchBooks item
