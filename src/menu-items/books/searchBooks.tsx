@@ -17,7 +17,7 @@ const searchBooks: NavItemType = {
   title: <FormattedMessage id="search-books" defaultMessage="Search Books" />,
   type: 'item',
   url: '/books/search',
-  icon: icons.SearchOutlined,
+  icon: icons.SearchOutlined
 };
 
 export default searchBooks;
