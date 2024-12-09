@@ -65,7 +65,19 @@ export default function SendBook({
           console.dir(values);
 
           axios
-            .post('/library/add', { ISBN: values.ISBN, author: values.author, publicationYear: values.publicationYear, title: values.title, totalRatings: (values.oneStar+values.twoStar+values.threeStar+values.fourStar+values.fiveStar), oneStar: values.oneStar, twoStar: values.twoStar, threeStar: values.threeStar, fourStar: values.fourStar, fiveStar: values.fiveStar, imageSmallURL: values.imageSmallURL, imageLargeURL: values.imageLargeURL})
+<<<<<<< HEAD
+            .post('/library/add', { ISBN: values.ISBN,
+                                    author: values.author,
+                                    publicationYear: values.publicationYear,
+                                    title: values.title,
+                                    totalRatings: (values.oneStar + values.twoStar + values.threeStar + values.fourStar + values.fiveStar),
+                                    oneStar: values.oneStar,
+                                    twoStar: values.twoStar,
+                                    threeStar: values.threeStar,
+                                    fourStar: values.fourStar,
+                                    fiveStar: values.fiveStar,
+                                    imageSmallURL: values.imageSmallURL,
+                                    imageLargeURL: values.imageLargeURL})
             .then((response) => {
               setSubmitting(false);
               resetForm({

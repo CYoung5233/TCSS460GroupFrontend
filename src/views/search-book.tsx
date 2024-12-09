@@ -48,10 +48,15 @@ export default function SearchBook() {
       setSearchValue(authors);
       setBooks([]);  // Clear books whenever search params change
       setError(null);  // Reset error state
-      setInitialSearchDone(true);
-      handleSearchClick();
     }
-  }, [authors, initialSearchDone]); // Effect depends on authors and searchValue
+  }, [authors]);
+
+  useEffect(() => {
+    if (!initialSearchDone && searchType === 'author' && searchValue === authors) {
+      handleSearchClick();
+      setInitialSearchDone(true);
+    }
+  }, [searchValue, searchType, initialSearchDone]); 
 
 
   useEffect(() => {
@@ -60,7 +65,7 @@ export default function SearchBook() {
       setBooks([]);
       setError(null);
     }
-  }, [searchType, initialSearchDone]);
+  }, [searchType]);
 
 
   const router = useRouter();
@@ -101,11 +106,11 @@ export default function SearchBook() {
           break;
       }
 
-      console.log('Fetching from:', endpoint);
+      // console.log('Fetching from:', endpoint);
 
       const response = await fetch(endpoint);
       const data = await response.json();
-      console.log('Response data:', data);
+      // console.log('Response data:', data);
 
       if (response.status === 404) {
         setError(data.message || 'No books found');
@@ -153,7 +158,7 @@ export default function SearchBook() {
         setError('No books found');
       }
     } catch (err) {
-      console.error('Search error:', err);
+      // console.error('Search error:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch books');
       setBooks([]);
     } finally {
