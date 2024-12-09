@@ -65,6 +65,7 @@ export default function SendBook({
           console.dir(values);
 
           axios
+<<<<<<< HEAD
             .post('/library/add', { ISBN: values.ISBN,
                                     author: values.author,
                                     publicationYear: values.publicationYear,
