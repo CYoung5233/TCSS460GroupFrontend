@@ -1,3 +1,8 @@
+//TODO delete this file before production - this file is group 2's backend
+
+
+
+
 // Section 1: Imports and Initial Setup
 
 //express is the framework we're going to use to handle requests
